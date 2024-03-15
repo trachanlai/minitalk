@@ -33,14 +33,14 @@ void	send_char(unsigned char c, int pid)
 {
 	int	bit;
 
-	bit = 0;
-	while (bit < 8)
+	bit = 7;
+	while (bit >= 0)
 	{
 		if ((c & (1 << bit)) != 0)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		bit++;
+		bit--;
 		usleep(100);
 	}
 }
