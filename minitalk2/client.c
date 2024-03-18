@@ -26,7 +26,7 @@ you send signals to a process (like telling it to terminate) using its PID.
 
 // client
 /*
-man kill: signal a process
+man kill: send signal to a process
 */
 
 void	send_char(unsigned char c, int pid)
@@ -41,7 +41,7 @@ void	send_char(unsigned char c, int pid)
 		else
 			kill(pid, SIGUSR2);
 		bit--;
-		usleep(100);
+		usleep(10000);
 	}
 }
 
@@ -53,7 +53,7 @@ void	send_signals(char *string, int pid)
 	while (string[i] != '\0')
 	{
 		send_char(string[i], pid);
-		usleep(1000);
+		// usleep(1000);
 		i++;
 	}
 	send_char('\0', pid);
@@ -79,7 +79,7 @@ int	main(int ac, char **av)
 	while (i < ac)
 	{
 		send_signals(av[i], pid);
-		usleep(10000);
+		// usleep(1000);
 		i++;
 	}
 	return (0);
