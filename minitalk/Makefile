@@ -23,7 +23,7 @@ clean:
 	rm -f server.o client.o utils.o
 
 fclean: clean
-	rm -f server client
+	rm -f server client utils
 
 re: fclean all
 

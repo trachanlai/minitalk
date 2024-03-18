@@ -38,43 +38,71 @@ So, this operation is effectively setting the least significant bit of i to 1,
 regardless of its previous value.
 */
 
-void	bit_sig(int sig)
+void sig_handler(int signum)
 {
-	static int	i = 0;
-	static int	bits = 0;
-	char		c;
-
-	if (sig == SIGUSR1 || sig == SIGUSR2)
-	{
-		i = i << 1;
-		if (sig == SIGUSR1)
-			i = i | 1;
-		bits++;
-		if (bits == 8)
-		{
-			c = (char)i;
-			if (c == '\0')
-				write(1, " ", 1);
-			else
-				write(1, &c, 1);
-			bits = 0;
-			i = 0;
-		}
-	}
+	if (signum == SIGUSR1)
+		ft_printf("SIG1 received");
+	else if (signum == SIGUSR2)
+		ft_printf("SIG2 received");
 }
 
 int	main(void)
 {
+	struct sigaction sa;
+	sa.sa_handler = sig_handler;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
 	int	pid;
 
 	pid = getpid();
 	ft_printf("The server PID is: %d\n", pid);
-	signal(SIGUSR1, bit_sig);
-	signal(SIGUSR2, bit_sig);
+
+	if (sigaction(SIGINT, &sa, NULL) == -1)
+		ft_printf("Error");
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
 	while (1)
 		pause();
 	return (0);
 }
+
+// void	bit_sig(int sig)
+// {
+// 	static int	i = 0;
+// 	static int	bits = 0;
+// 	char		c;
+
+// 	if (sig == SIGUSR1 || sig == SIGUSR2)
+// 	{
+// 		i = i << 1;
+// 		if (sig == SIGUSR1)
+// 			i = i | 1;
+// 		bits++;
+// 		if (bits == 8)
+// 		{
+// 			c = (char)i;
+// 			if (c == '\0')
+// 				write(1, " ", 1);
+// 			else
+// 				write(1, &c, 1);
+// 			bits = 0;
+// 			i = 0;
+// 		}
+// 	}
+// }
+
+// int	main(void)
+// {
+// 	int	pid;
+
+// 	pid = getpid();
+// 	ft_printf("The server PID is: %d\n", pid);
+// 	signal(SIGUSR1, bit_sig);
+// 	signal(SIGUSR2, bit_sig);
+// 	while (1)
+// 		pause();
+// 	return (0);
+// }
 
 /*
 1. The bit_sig function is defined to handle signals. It has two static variables i and bits. 
